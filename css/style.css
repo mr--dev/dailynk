@@ -1,0 +1,6 @@
+/* Empty. Add your own CSS if you like */
+.uppercase {
+	text-transform: uppercase;
+}
+.visited { text-decoration: line-through; }
+.visited a { background-color: #DDDDDD !important; }
