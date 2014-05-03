@@ -81,34 +81,37 @@
         </ion-header-bar>
         <ion-content>
           <div class="list">
-            <label class="item item-input">
-              <span class="input-label">Title</span>
-              <input type="text" ng-model="newLink.title"></input>
-            </label>
-            <label class="item item-input">
-              <span class="input-label">URL</span>
-              <input type="text" ng-model="newLink.id"></input>
-            </label>
-            <ul class="list">
-              <li class="item item-checkbox" ng-repeat="day in days">
-                <label class="checkbox">
-                  <input type="checkbox" ng-model="newLink.days[$index]">
-                </label>{{day}}
-              </li>
-              <li class="item item-toggle">
-                Favorite
-                <label class="toggle toggle-positive">
-                  <input type="checkbox" ng-model="newLink.favorite">
-                  <div class="track">
-                    <div class="handle"></div>
-                  </div>
-                </label>
-              </li>
-            </ul>
+            <form name="form" id="form" novalidate>
+              <label class="item item-input">
+                <span class="input-label">Title</span>
+                <input type="text" ng-model="newLink.title" required></input>
+              </label>
+              <label class="item item-input">
+                <span class="input-label">URL</span>
+                <input type="text" ng-model="newLink.id" required></input>
+              </label>
+              <ul class="list">
+                <li class="item item-checkbox" ng-repeat="day in days">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="newLink.days[$index]" ng-change="checkValidationDays()">
+                  </label>{{day}}
+                </li>
+                <input type="hidden" ng-model="newLink.isDayValid" required />
+                <li class="item item-toggle">
+                  Favorite
+                  <label class="toggle toggle-positive">
+                    <input type="checkbox" ng-model="newLink.favorite">
+                    <div class="track">
+                      <div class="handle"></div>
+                    </div>
+                  </label>
+                </li>
+              </ul>
+              <button class="button button-block button-balanced" ng-click="saveLink()" ng-disabled="form.$invalid">
+                Save
+              </button>
+            </form>
           </div>
-          <button class="button button-block button-balanced" ng-click="saveLink()">
-            Save
-          </button>
         </ion-content>  
       </ion-side-menu>
       <!-- /.RIGHT MENU -->

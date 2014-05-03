@@ -25,6 +25,7 @@ angular.module('dailynk.controllers', [])
 			oldId: "",
 			title: "",
 			days: [false, false, false, false, false, false, false],
+			isDayValid: "",	// for form validation (required) ["" : "valid"]
 			favorite: false,
 		};
 	}
@@ -72,6 +73,18 @@ angular.module('dailynk.controllers', [])
 		$timeout(function() { $scope.$apply() });
 	};
 
+	/* Check one day at least for saving link */
+	$scope.checkValidationDays = function() {
+		var check = false;
+		for (var ii=0; ii<$scope.newLink.days.length; ii++) {
+			if ($scope.newLink.days[ii]) {
+				check = true;
+				break;
+			}
+		}
+		$scope.newLink.isDayValid = check ? "valid" : "";
+	}
+
 	/* After tapping on plus icon */
 	$scope.addLink = function() {
 
@@ -100,6 +113,7 @@ angular.module('dailynk.controllers', [])
 		$scope.toggleRight();
 	};
 
+	/* When deleting, remove only day selected check */
 	$scope.deleteLink = function(item) {
 
 		$scope.db[item.id].days[$scope.selectedDay] = false;
@@ -116,9 +130,9 @@ angular.module('dailynk.controllers', [])
 
 		// Update storage
 		$scope.updateStorage();
-		$scope.doWeekView();
 
 		// Update View
+		$scope.doWeekView();
 		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
 
 	};
@@ -147,6 +161,7 @@ angular.module('dailynk.controllers', [])
 
 		// Update View
 		$scope.doWeekView();
+		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
 
 		$scope.toggleRight();
 
