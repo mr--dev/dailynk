@@ -1,6 +1,6 @@
 angular.module('dailynk.controllers', [])
 
-.controller('dailynkCtrl', function($scope, $timeout, $ionicSideMenuDelegate, $filter) {
+.controller('dailynkCtrl', function($scope, $timeout, $ionicSideMenuDelegate, $ionicListDelegate, $filter) {
 
 	console.log("Creating dailynkCtrl");
 
@@ -33,23 +33,6 @@ angular.module('dailynk.controllers', [])
 	$scope.initApp = function() {
 		
 		$scope.newLink = $scope.getNewLink();
-
-		$scope.itemButtons = [ 
-			{ 
-				text: 'Edit', 
-				type: 'button button-energized', 
-				onTap: function(item) { 
-					$scope.editLink(item);
-				} 
-			}, 
-			{ 
-				text: 'Delete', 
-				type: 'button button-assertive', 
-				onTap: function(item) { 
-					$scope.deleteLink(item);
-				} 
-			},
-		];
 		
 		var d = new Date();
 		// 0 = Monday, 1 = Tuesday ...
@@ -99,8 +82,15 @@ angular.module('dailynk.controllers', [])
 
 	};
 
+	$scope.closeOptionButtons = function() {
+		$ionicListDelegate.$getByHandle("link-list-handler").closeOptionButtons();
+	}
+
 	/* Toggle right and show form for editing link */
 	$scope.editLink = function(item) {
+		// Close option buttons
+		$scope.closeOptionButtons();
+
 		var link = $scope.db[item.id];
 		$scope.newLink.oldId = item.id;
 		$scope.newLink.id = item.id;
@@ -111,15 +101,26 @@ angular.module('dailynk.controllers', [])
 	};
 
 	$scope.deleteLink = function(item) {
-		var itemIndexToDelete = 0;
-		for (var ii = 0; ii < $scope.selectedDayLinks.length; ii++) {
-			if (item.id == $scope.selectedDayLinks[ii].id) itemIndexToDelete = ii;
+
+		$scope.db[item.id].days[$scope.selectedDay] = false;
+		
+		// If all days are false delete link
+		var checkActive = false;
+		for (var ii=0; ii<$scope.days.length; ii++) {
+			if ($scope.db[item.id].days[ii]) checkActive = true;
 		}
-		$scope.selectedDayLinks.splice(itemIndexToDelete, 1);
-		// Update DB
-		$scope.db[$scope.selectedDay]  = $scope.selectedDayLinks;
+		if (!checkActive) delete $scope.db[item.id];
+
+		// Close option buttons
+		$scope.closeOptionButtons();
+
 		// Update storage
-		localStorage.setItem($scope.selectedDay, angular.toJson( $scope.db[$scope.selectedDay] ));
+		$scope.updateStorage();
+		$scope.doWeekView();
+
+		// Update View
+		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
+
 	};
 
 	// Add or edit link
@@ -139,7 +140,8 @@ angular.module('dailynk.controllers', [])
 		// Update DB
 		$scope.db[$scope.newLink.id] = newLink;
 		// Update storage
-		localStorage.setItem("db", angular.toJson($scope.db));
+		$scope.updateStorage();
+		
 		// Clean new Link
 		$scope.newLink = $scope.getNewLink();
 
@@ -148,6 +150,11 @@ angular.module('dailynk.controllers', [])
 
 		$scope.toggleRight();
 
+	};
+
+	// Update storage
+	$scope.updateStorage = function() {
+		localStorage.setItem("db", angular.toJson($scope.db));
 	};
 
 	// Open Link In App Browser
