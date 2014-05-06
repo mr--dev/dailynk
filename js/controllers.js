@@ -1,6 +1,13 @@
 angular.module('dailynk.controllers', [])
 
-.controller('dailynkCtrl', function($scope, $timeout, $ionicSideMenuDelegate, $ionicListDelegate, $filter) {
+.controller('dailynkCtrl', function(
+	$scope,
+	$ionicPopup, 
+	$timeout, 
+	$ionicNavBarDelegate, 
+	$ionicSideMenuDelegate, 
+	$ionicListDelegate, 
+	$filter) {
 
 	console.log("Creating dailynkCtrl");
 
@@ -37,9 +44,28 @@ angular.module('dailynk.controllers', [])
 		
 		var d = new Date();
 		// 0 = Monday, 1 = Tuesday ...
-		$scope.selectedDay = (d.getDay() - 1);
+		$scope.selectedDay = (d.getDay() == 0) ? 6:  (d.getDay() - 1);
 		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
 
+	};
+
+	$scope.onresize = function() {
+		console.log("Resizing");
+		$scope.UIproperty = {
+			windowWidth: window.innerWidth,
+			windowHeight: window.innerHeight
+		};
+		$timeout(function() { $scope.$apply() });
+	};
+
+	/* Number of records stored */
+	$scope.dbLength = function() {
+		return Object.keys($scope.db).length;
+	};
+
+	/* Back in history - NOT WORKING */
+	$scope.goBack = function() {
+    $ionicNavBarDelegate.back();
 	};
 
 	$scope.doWeekView = function() {
@@ -61,17 +87,6 @@ angular.module('dailynk.controllers', [])
 			}
 		}
 	}
-
-
-
-	$scope.onresize = function() {
-		console.log("Resizing");
-		$scope.UIproperty = {
-			windowWidth: window.innerWidth,
-			windowHeight: window.innerHeight
-		};
-		$timeout(function() { $scope.$apply() });
-	};
 
 	/* Check one day at least for saving link */
 	$scope.checkValidationDays = function() {
@@ -167,12 +182,12 @@ angular.module('dailynk.controllers', [])
 
 	};
 
-	// Update storage
+	/* Update storage */
 	$scope.updateStorage = function() {
 		localStorage.setItem("db", angular.toJson($scope.db));
 	};
 
-	// Open Link In App Browser
+	/* Open Link In App Browser */
 	$scope.openLink = function(url, event) {
 
 		// Check if http:// missing
@@ -193,9 +208,49 @@ angular.module('dailynk.controllers', [])
 	$scope.toggleLeft = function() {
 		$ionicSideMenuDelegate.toggleLeft();
 	};
+
 	$scope.toggleRight = function() {
 		$ionicSideMenuDelegate.toggleRight();
 	};
+
+	/* Ask for confirmation for clearing data */
+	$scope.confirmClearData = function() {
+		var confirmPopup = $ionicPopup.confirm({
+			title: "Clear Data",
+			template: "Are you sure you want to delete all your links?"
+		});
+		confirmPopup.then(function(res){
+			if (res) {
+				try {
+					$scope.db = {};
+					$scope.selectedDayLinks = [];
+					$scope.doWeekView();
+					$scope.updateStorage();
+					var alertPopup = $ionicPopup.alert({
+						title: "Clear Data",
+						template: "All data has been cleared."
+					});
+				} catch (e) {
+					var alertPopup = $ionicPopup.alert({
+						title: "Clear Data",
+						template: "Something went wrong."
+					});
+				}
+			} else {
+				console.log("KO");
+			}
+		});
+	};
+
+	$scope.favoritesFilter = function() {
+		var favorites = {};
+		angular.forEach($scope.db, function(value, key) {
+			if (value.favorite) {
+				favorites[key] = value;
+			}
+    });
+		return favorites;
+	}
 
 	/* At the end, init application */
 	$scope.initUI();

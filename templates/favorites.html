@@ -1,0 +1,19 @@
+<ion-view title="Favorites">
+	<ion-header-bar class="bar-positive">
+	  <div class="buttons">
+	    <button class="button" ng-click="goBack()"><i class="icon ion-arrow-left-c"></i></button>
+	  </div>
+  	<h1 class="title">Favorites</h1>
+	</ion-header-bar>
+
+  <ion-content>
+
+    <ion-list can-swipe="false">
+      <ion-item ng-repeat="(key, value) in favoritesFilter()" ng-click="openLink(key, $event)">
+        {{value.title}}
+      </ion-item>
+    </ion-list>
+    
+  </ion-content>
+
+</ion-view>

@@ -1,0 +1,94 @@
+<ion-view title="Home">
+<ion-side-menus>
+
+  <!-- MAIN MENU -->
+  <ion-side-menu-content>
+
+    <ion-header-bar align-title="center" class="bar-positive">
+      <div class="buttons">
+        <button class="button" ng-click="toggleLeft()"><i class="ion-navicon-round"></i></button>
+      </div>
+      <h1 class="title">Dailynk - <span class="uppercase">{{days[selectedDay]}}</span></h1>
+    </ion-header-bar>
+
+    <!-- link of selected day -->
+    <ion-content>
+      <ion-list can-swipe="true" delegate-handle="link-list-handler">
+        <ion-item ng-repeat="link in selectedDayLinks" ng-click="openLink(link.id, $event)">
+          {{link.title}}
+          <ion-option-button class="button-energized" ng-click="editLink(link)">Edit</ion-option-button>
+          <ion-option-button class="button-assertive" ng-click="deleteLink(link)">Delete</ion-option-button>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+    <!-- /.link of selected day -->
+
+    <div class="tabs tabs-positive tabs-icon-only">
+      <a class="tab-item" ng-click="toggleRight()"><i class="icon ion-android-add"></i></a>
+      <a class="tab-item" href="#/favorites"><i class="icon ion-android-star"></i></a>
+      <a class="tab-item" href="#/settings"><i class="icon ion-android-settings"></i></a>
+    </div>
+
+  </ion-side-menu-content>
+  <!-- /.MAIN MENU -->
+
+  <!-- LEFT MENU -->
+  <ion-side-menu side="left">
+    <ion-header-bar align-title="center" class="bar-positive">
+      <h1 class="title">Day of the week</h1>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <ion-item ng-repeat="day in days" item-type="item" ng-click="chooseDay($index)">{{days[$index]}}</ion-item>
+      </ion-list>
+    </ion-content>  
+  </ion-side-menu>
+  <!-- /.LEFT MENU -->
+
+  <!-- RIGHT MENU -->
+  <ion-side-menu side="right" width="UIproperty.windowWidth">
+    <ion-header-bar align-title="center" class="bar-positive">
+      <div class="buttons">
+          <button class="button" ng-click="addLink()"><i class="ion-android-arrow-back"></i></button>
+      </div>
+      <h1 class="title">Add Link</h1>
+    </ion-header-bar>
+    <ion-content>
+      <div class="list">
+        <form name="form" id="form" novalidate>
+          <label class="item item-input">
+            <span class="input-label">Title</span>
+            <input type="text" ng-model="newLink.title" required></input>
+          </label>
+          <label class="item item-input">
+            <span class="input-label">URL</span>
+            <input type="text" ng-model="newLink.id" required></input>
+          </label>
+          <ul class="list">
+            <li class="item item-checkbox" ng-repeat="day in days">
+              <label class="checkbox">
+                <input type="checkbox" ng-model="newLink.days[$index]" ng-change="checkValidationDays()">
+              </label>{{day}}
+            </li>
+            <input type="hidden" ng-model="newLink.isDayValid" required />
+            <li class="item item-toggle">
+              Favorite
+              <label class="toggle toggle-positive">
+                <input type="checkbox" ng-model="newLink.favorite">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </ul>
+          <button class="button button-block button-balanced" ng-click="saveLink()" ng-disabled="form.$invalid">
+            Save
+          </button>
+        </form>
+      </div>
+    </ion-content>  
+  </ion-side-menu>
+  <!-- /.RIGHT MENU -->
+
+</ion-side-menus>
+</ion-view>
