@@ -4,7 +4,6 @@ angular.module('dailynk.controllers', [])
 	$scope,
 	$ionicPopup, 
 	$timeout, 
-	$ionicNavBarDelegate, 
 	$ionicSideMenuDelegate, 
 	$ionicListDelegate, 
 	$filter) {
@@ -63,9 +62,9 @@ angular.module('dailynk.controllers', [])
 		return Object.keys($scope.db).length;
 	};
 
-	/* Back in history - NOT WORKING */
+	/* Back in history */
 	$scope.goBack = function() {
-    $ionicNavBarDelegate.back();
+    history.back();
 	};
 
 	$scope.doWeekView = function() {
