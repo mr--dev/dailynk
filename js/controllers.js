@@ -125,6 +125,7 @@ angular.module('dailynk.controllers', [])
 		$scope.newLink.title = link.title;
 		$scope.newLink.days = link.days;
 		$scope.newLink.favorite = link.favorite;
+		$scope.checkValidationDays();
 		$scope.toggleRight();
 	};
 
