@@ -14,7 +14,7 @@
     <!-- link of selected day -->
     <ion-content>
       <ion-list can-swipe="true" delegate-handle="link-list-handler">
-        <ion-item ng-repeat="link in selectedDayLinks" ng-click="openLink(link.id, $event)">
+        <ion-item ng-repeat=" link in selectedDayLinks | orderBy:'visited':false " ng-class="{visited: db[link.id].visited}" ng-click="openLink(link.id, $event)">
           {{link.title}}
           <ion-option-button class="button-energized" ng-click="editLink(link)">Edit</ion-option-button>
           <ion-option-button class="button-assertive" ng-click="deleteLink(link)">Delete</ion-option-button>

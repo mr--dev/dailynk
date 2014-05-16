@@ -20,6 +20,7 @@ angular.module('dailynk.controllers', [])
 
 	/* Initializing DB */
 	$scope.initDB = function() {
+		$scope.settings = (localStorage.getItem("settings") !== null) ?  angular.fromJson(localStorage.getItem("settings")) : {} ;
 		$scope.db = (localStorage.getItem("db") !== null) ?  angular.fromJson(localStorage.getItem("db")) : {} ;
 		$scope.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 		$scope.doWeekView();
@@ -33,6 +34,7 @@ angular.module('dailynk.controllers', [])
 			days: [false, false, false, false, false, false, false],
 			isDayValid: "",	// for form validation (required) ["" : "valid"]
 			favorite: false,
+			visited: false,
 		};
 	}
 
@@ -45,6 +47,14 @@ angular.module('dailynk.controllers', [])
 		// 0 = Monday, 1 = Tuesday ...
 		$scope.selectedDay = (d.getDay() == 0) ? 6:  (d.getDay() - 1);
 		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
+
+		// Check last day that dailynk has been opened
+		if ($scope.selectedDay != $scope.settings.lastDayOpenedApp) {
+			$scope.resetVisitedLink();
+		}
+		// Update last day opened app with today
+		$scope.settings.lastDayOpenedApp = $scope.selectedDay;
+		$scope.updateStorageSettings();
 
 	};
 
@@ -67,6 +77,18 @@ angular.module('dailynk.controllers', [])
     history.back();
 	};
 
+	$scope.resetVisitedLink = function() {
+		var links = Object.keys($scope.db);
+		for (var ii=0; ii<links.length; ii++) {
+			var link = $scope.db[links[ii]]; // for sake of readability
+			if (link.visited) {
+				// update on original object
+				$scope.db[links[ii]].visited = false;
+			}
+		}
+		$scope.updateStorageDb();
+	};
+
 	$scope.doWeekView = function() {
 
 		$scope.weekView = [[],[],[],[],[],[],[]];
@@ -80,7 +102,8 @@ angular.module('dailynk.controllers', [])
 				if (link.days[jj]) {
 					$scope.weekView[jj].push({
 						id: links[ii],
-						title: link.title
+						title: link.title,
+						visited: link.visited
 					});
 				}
 			}
@@ -124,6 +147,7 @@ angular.module('dailynk.controllers', [])
 		$scope.newLink.title = link.title;
 		$scope.newLink.days = link.days;
 		$scope.newLink.favorite = link.favorite;
+		$scope.newLink.visited = link.visited;
 		$scope.checkValidationDays();
 		$scope.toggleRight();
 	};
@@ -144,7 +168,7 @@ angular.module('dailynk.controllers', [])
 		$scope.closeOptionButtons();
 
 		// Update storage
-		$scope.updateStorage();
+		$scope.updateStorageDb();
 
 		// Update View
 		$scope.doWeekView();
@@ -164,12 +188,13 @@ angular.module('dailynk.controllers', [])
 			title: $scope.newLink.title, 
 			days: $scope.newLink.days,
 			favorite: $scope.newLink.favorite,
+			visited: $scope.newLink.visited
 		};
 		
 		// Update DB
 		$scope.db[$scope.newLink.id] = newLink;
 		// Update storage
-		$scope.updateStorage();
+		$scope.updateStorageDb();
 		
 		// Clean new Link
 		$scope.newLink = $scope.getNewLink();
@@ -182,17 +207,29 @@ angular.module('dailynk.controllers', [])
 
 	};
 
-	/* Update storage */
-	$scope.updateStorage = function() {
+	/* Update storage database */
+	$scope.updateStorageDb = function() {
 		localStorage.setItem("db", angular.toJson($scope.db));
 	};
+	$scope.updateStorageSettings = function() {
+		localStorage.setItem("settings", angular.toJson($scope.settings));
+	};
 
-	/* Open Link In App Browser */
+
+	/* Open Link  
+	 * _self: opens in the Cordova WebView, 
+	 * _blank: open in the InAppBrowser
+	 * _system: open in the system web browser
+	 */
 	$scope.openLink = function(url, event) {
+
+		// Set link visited (storage)
+		$scope.db[url].visited = true;
+		$scope.updateStorageDb();
 
 		// Check if http:// missing
 		var url = url.indexOf("http://") == -1 ? "http://" + url : url;
-		$scope.wRef = window.open(url, "_blank", "location=no");
+		$scope.wRef = window.open(url, "_system");
 
 		// Change style
 		var item = angular.element(event.currentTarget).addClass("visited");
@@ -225,7 +262,7 @@ angular.module('dailynk.controllers', [])
 					$scope.db = {};
 					$scope.selectedDayLinks = [];
 					$scope.doWeekView();
-					$scope.updateStorage();
+					$scope.updateStorageDb();
 					var alertPopup = $ionicPopup.alert({
 						title: "Clear Data",
 						template: "All data has been cleared."

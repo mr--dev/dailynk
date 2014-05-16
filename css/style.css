@@ -3,7 +3,7 @@
 	text-transform: uppercase;
 }
 .visited { text-decoration: line-through; }
-.visited a { background-color: #DDDDDD !important; }
+.visited .item-content { background-color: #EEEEEE; }
 
 /* form validation */
 input[type=text].ng-invalid {
