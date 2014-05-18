@@ -252,8 +252,9 @@ angular.module('dailynk.controllers', [])
 
 	/* Ask for confirmation for clearing data */
 	$scope.confirmClearData = function() {
+		var title = "Clear data";
 		var confirmPopup = $ionicPopup.confirm({
-			title: "Clear Data",
+			title: title,
 			template: "Are you sure you want to delete all your links?"
 		});
 		confirmPopup.then(function(res){
@@ -264,17 +265,42 @@ angular.module('dailynk.controllers', [])
 					$scope.doWeekView();
 					$scope.updateStorageDb();
 					var alertPopup = $ionicPopup.alert({
-						title: "Clear Data",
+						title: title,
 						template: "All data has been cleared."
 					});
 				} catch (e) {
 					var alertPopup = $ionicPopup.alert({
-						title: "Clear Data",
+						title: title,
 						template: "Something went wrong."
 					});
 				}
 			} else {
 				console.log("KO");
+			}
+		});
+	};
+
+	/* Ask for confirmation for resetting visited */
+	$scope.confirmResetVisited = function() {
+		var title = "Reset visited";
+		var confirmPopup = $ionicPopup.confirm({
+			title: title,
+			template: "Are you sure you?"
+		});
+		confirmPopup.then(function(res){
+			if (res) {
+				try {
+					$scope.resetVisitedLink();
+					var alertPopup = $ionicPopup.alert({
+						title: title,
+						template: "Done."
+					});
+				} catch (e) {
+					var alertPopup = $ionicPopup.alert({
+						title: title,
+						template: "Something went wrong."
+					});
+				}
 			}
 		});
 	};
