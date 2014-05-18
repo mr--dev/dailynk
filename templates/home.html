@@ -8,7 +8,7 @@
       <div class="buttons">
         <button class="button" ng-click="toggleLeft()"><i class="ion-navicon-round"></i></button>
       </div>
-      <h1 class="title">Dailynk - <span class="uppercase">{{days[selectedDay]}}</span></h1>
+      <h1 class="title">Dailynk - <span class="uppercase">{{labelDays[selectedDay]}}</span></h1>
     </ion-header-bar>
 
     <!-- link of selected day -->
@@ -40,6 +40,7 @@
     <ion-content>
       <ion-list>
         <ion-item ng-repeat="day in days" item-type="item" ng-click="chooseDay($index)">{{days[$index]}}</ion-item>
+        <ion-item item-type="item" ng-click="chooseDay(7)" class="uppercase">Show all</ion-item>
       </ion-list>
     </ion-content>  
   </ion-side-menu>

@@ -22,6 +22,7 @@ angular.module('dailynk.controllers', [])
 	$scope.initDB = function() {
 		$scope.settings = (localStorage.getItem("settings") !== null) ?  angular.fromJson(localStorage.getItem("settings")) : {} ;
 		$scope.db = (localStorage.getItem("db") !== null) ?  angular.fromJson(localStorage.getItem("db")) : {} ;
+		$scope.labelDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "All links"];
 		$scope.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 		$scope.doWeekView();
 	};
@@ -89,9 +90,10 @@ angular.module('dailynk.controllers', [])
 		$scope.updateStorageDb();
 	};
 
+	/* Seventh is for all day */
 	$scope.doWeekView = function() {
 
-		$scope.weekView = [[],[],[],[],[],[],[]];
+		$scope.weekView = [[],[],[],[],[],[],[],[]];
 		var links = Object.keys($scope.db);
 		
 		// Cicle through links
@@ -107,6 +109,13 @@ angular.module('dailynk.controllers', [])
 					});
 				}
 			}
+
+			// Always push on seventh day - ALL
+			$scope.weekView[7].push({
+				id: links[ii],
+				title: link.title,
+				visited: link.visited
+			});
 		}
 	}
 
@@ -155,14 +164,23 @@ angular.module('dailynk.controllers', [])
 	/* When deleting, remove only day selected check */
 	$scope.deleteLink = function(item) {
 
-		$scope.db[item.id].days[$scope.selectedDay] = false;
-		
-		// If all days are false delete link
-		var checkActive = false;
-		for (var ii=0; ii<$scope.days.length; ii++) {
-			if ($scope.db[item.id].days[ii]) checkActive = true;
+		// If selected day is ALL (7), then delete link, not day assignation
+		if ($scope.selectedDay == 7) {
+
+			delete $scope.db[item.id];
+			
+		} else {
+
+			$scope.db[item.id].days[$scope.selectedDay] = false;
+			
+			// If all days are false delete link
+			var checkActive = false;
+			for (var ii=0; ii<$scope.days.length; ii++) {
+				if ($scope.db[item.id].days[ii]) checkActive = true;
+			}
+			if (!checkActive) delete $scope.db[item.id];
+
 		}
-		if (!checkActive) delete $scope.db[item.id];
 
 		// Close option buttons
 		$scope.closeOptionButtons();
@@ -236,6 +254,7 @@ angular.module('dailynk.controllers', [])
 
 	};
 
+	/* @param day: day of the week, if -1 means all links */
 	$scope.chooseDay = function(day) {
 		$scope.selectedDay = day;
 		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
