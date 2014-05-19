@@ -134,10 +134,17 @@ angular.module('dailynk.controllers', [])
 	/* After tapping on plus icon */
 	$scope.addLink = function() {
 
-		// Clean newLink object
-		$scope.newLink = $scope.getNewLink();
-		// Show form
-		$scope.toggleRight();
+		if ($scope.dbLength() < $scope.MAX_LINK_NUMBER) {
+			// Clean newLink object
+			$scope.newLink = $scope.getNewLink();
+			// Show form
+			$scope.toggleRight();
+		} else {
+			var alertPopup = $ionicPopup.alert({
+				title: "Operation not allowed",
+				template: "This version of dailynk allows to save " + $scope.MAX_LINK_NUMBER + " links. Delete some links to save new ones."
+			});
+		}
 
 	};
 
@@ -343,6 +350,7 @@ angular.module('dailynk.controllers', [])
 	$scope.initUI();
 	$scope.initDB();
 	$scope.initApp();
+	$scope.MAX_LINK_NUMBER = 20;
 	window.onresize = $scope.onresize;
 
 	/* Utility */
