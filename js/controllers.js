@@ -245,6 +245,11 @@ angular.module('dailynk.controllers', [])
 		$scope.db[url].visited = true;
 		$scope.updateStorageDb();
 
+		// set visited on selectedDayLinks to update view - Fix #4
+		for (var ii=0; ii<$scope.selectedDayLinks.length; ii++){
+			if ($scope.selectedDayLinks[ii].id == url) $scope.selectedDayLinks[ii].visited = true;
+		};
+
 		// Check if http:// missing
 		var url = url.indexOf("http://") == -1 ? "http://" + url : url;
 		$scope.wRef = window.open(url, "_system");
