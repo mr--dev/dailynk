@@ -12,3 +12,9 @@ input[type=text].ng-invalid {
 input[type=text].ng-valid {
 	border: 1px solid green !important;
 }
+
+/* edit, remove icon align */
+.button .icon.icon-list-vertical-align {
+	vertical-align: text-top;
+}
+#settings-list button i { width: 24px; }

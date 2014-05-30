@@ -10,7 +10,8 @@
 
     <ion-list can-swipe="false">
       <ion-item ng-repeat="(key, value) in favoritesFilter()" ng-click="openLink(key, $event)">
-        {{value.title}}
+        <h3 class="uppercase">{{value.title}}</h3>
+        <p>{{key}}</p>
       </ion-item>
     </ion-list>
     

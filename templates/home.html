@@ -6,7 +6,7 @@
 
     <ion-header-bar align-title="center" class="bar-positive">
       <div class="buttons">
-        <button class="button" ng-click="toggleLeft()"><i class="ion-navicon-round"></i></button>
+        <button class="button" ng-click="toggleLeft()"><i class="icon ion-navicon-round"></i></button>
       </div>
       <h1 class="title">Dailynk - <span class="uppercase">{{labelDays[selectedDay]}}</span></h1>
     </ion-header-bar>
@@ -15,9 +15,14 @@
     <ion-content>
       <ion-list can-swipe="true" delegate-handle="link-list-handler">
         <ion-item ng-repeat=" link in selectedDayLinks | orderBy:'visited':false " ng-class="{visited: db[link.id].visited}" ng-click="openLink(link.id, $event)">
-          {{link.title}}
-          <ion-option-button class="button-energized" ng-click="editLink(link)">Edit</ion-option-button>
-          <ion-option-button class="button-assertive" ng-click="deleteLink(link)">Delete</ion-option-button>
+          <h3 class="uppercase">{{link.title}}</h3>
+          <p>{{link.id}}</p>
+          <ion-option-button class="light-bg" ng-click="editLink(link)">
+            <i class="icon ion-edit icon-list-vertical-align"></i>
+          </ion-option-button>
+          <ion-option-button class="light-bg" ng-click="deleteLink(link)">
+            <i class="icon ion-android-trash icon-list-vertical-align"></i>
+          </ion-option-button>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -50,7 +55,7 @@
   <ion-side-menu side="right" width="UIproperty.windowWidth">
     <ion-header-bar align-title="center" class="bar-positive">
       <div class="buttons">
-          <button class="button" ng-click="toggleRight()"><i class="ion-android-arrow-back"></i></button>
+          <button class="button" ng-click="toggleRight()"><i class="icon ion-android-arrow-back"></i></button>
       </div>
       <h1 class="title">Add Link</h1>
     </ion-header-bar>

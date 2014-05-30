@@ -8,28 +8,32 @@
 
   <ion-content>
 
-  	<div class="list">
-      <a class="item">
+    <ion-list id="settings-list">
+      <ion-item class="item-button-right"> 
         Link limit
-        <span class="badge badge-balanced">{{MAX_LINK_NUMBER}}</span>
-      </a>
-			<a class="item">
-    		Link stored
-				<span class="badge badge-balanced">{{dbLength()}}</span>
-			</a>
-      <a class="item item-button-right">
+        <button class="button">
+          <i>{{MAX_LINK_NUMBER}}</i>
+        </button>
+      </ion-item>
+      <ion-item class="item-button-right">
+        Link stored
+        <button class="button">
+          <i class="icon">{{dbLength()}}</i>
+      </button>
+      </ion-item>
+      <ion-item class="item-button-right">
         Reset visited
         <button class="button button-calm" ng-click="confirmResetVisited()">
           <i class="icon ion-refresh"></i>
         </button>
-      </a>
-  		<a class="item item-button-right">
-  			Clear data
-  			<button class="button button-assertive" ng-click="confirmClearData()">
-					<i class="icon ion-android-trash"></i>
-  			</button>
-  		</a>
-  	</div>
+      </ion-item>
+      <ion-item class="item-button-right">
+        Clear data
+        <button class="button button-assertive" ng-click="confirmClearData()">
+          <i class="icon ion-android-trash"></i>
+        </button>
+      </ion-item>
+    </ion-list>
     
   </ion-content>
 
