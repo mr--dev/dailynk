@@ -23,6 +23,7 @@ angular.module('dailynk.controllers', [])
 		$scope.settings = (localStorage.getItem("settings") !== null) ?  angular.fromJson(localStorage.getItem("settings")) : {} ;
 		$scope.db = (localStorage.getItem("db") !== null) ?  angular.fromJson(localStorage.getItem("db")) : {} ;
 		$scope.labelDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "All links"];
+		$scope.shortLabelDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 		$scope.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 		$scope.doWeekView();
 	};
@@ -43,10 +44,7 @@ angular.module('dailynk.controllers', [])
 	$scope.initApp = function() {
 		
 		$scope.newLink = $scope.getNewLink();
-		
-		var d = new Date();
-		// 0 = Monday, 1 = Tuesday ...
-		$scope.selectedDay = (d.getDay() == 0) ? 6:  (d.getDay() - 1);
+		$scope.selectedDay = $scope.getTodayValue(); 
 		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
 
 		// Check last day that dailynk has been opened
@@ -58,6 +56,12 @@ angular.module('dailynk.controllers', [])
 		$scope.updateStorageSettings();
 
 	};
+
+	/* return today integer number: 0 = Monday, 1 = Tuesday ...*/
+	$scope.getTodayValue = function() {
+		var d = new Date();
+		return (d.getDay() == 0) ? 6:  (d.getDay() - 1);
+	}
 
 	$scope.onresize = function() {
 		console.log("Resizing");
@@ -157,7 +161,8 @@ angular.module('dailynk.controllers', [])
 		// Close option buttons
 		$scope.closeOptionButtons();
 
-		var link = $scope.db[item.id];
+		// Clone object 
+		var link = angular.fromJson(angular.toJson($scope.db[item.id]));
 		$scope.newLink.oldId = item.id;
 		$scope.newLink.id = item.id;
 		$scope.newLink.title = link.title;
@@ -322,10 +327,6 @@ angular.module('dailynk.controllers', [])
 			if (res) {
 				try {
 					$scope.resetVisitedLink();
-					var alertPopup = $ionicPopup.alert({
-						title: title,
-						template: "Done."
-					});
 				} catch (e) {
 					var alertPopup = $ionicPopup.alert({
 						title: title,

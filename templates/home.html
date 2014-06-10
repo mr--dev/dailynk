@@ -15,7 +15,10 @@
     <ion-content>
       <ion-list can-swipe="true" delegate-handle="link-list-handler">
         <ion-item ng-repeat=" link in selectedDayLinks | orderBy:'visited':false " ng-class="{visited: db[link.id].visited}" ng-click="openLink(link.id, $event)">
-          <h3 class="uppercase">{{link.title}}</h3>
+          <h3 class="uppercase">
+            <i class="icon" ng-class="{'ion-ios7-star': db[link.id].favorite, 'ion-ios7-star-outline': !db[link.id].favorite}"></i> 
+            {{link.title}}
+          </h3>
           <p>{{link.id}}</p>
           <ion-option-button class="light-bg" ng-click="editLink(link)">
             <i class="icon ion-edit icon-list-vertical-align"></i>
@@ -44,8 +47,13 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item ng-repeat="day in days" item-type="item" ng-click="chooseDay($index)">{{days[$index]}}</ion-item>
-        <ion-item item-type="item" ng-click="chooseDay(7)" class="uppercase">Show all</ion-item>
+        <ion-item ng-repeat="day in days" item-type="item" ng-click="chooseDay($index)">
+          <span class="item-icon-right">
+            <i ng-if="$index == getTodayValue()" class="icon ion-record today-placeholder"></i>
+            {{days[$index]}}
+          </span>
+        </ion-item>
+        <ion-item item-type="item" ng-click="chooseDay(7)" class="uppercase border-top-2">Show all</ion-item>
       </ion-list>
     </ion-content>  
   </ion-side-menu>
@@ -71,10 +79,12 @@
             <input type="text" ng-model="newLink.id" required></input>
           </label>
           <ul class="list">
-            <li class="item item-checkbox" ng-repeat="day in days">
-              <label class="checkbox">
+            <li class="item inline-days">
+              <label class="checkbox" ng-repeat="day in days">
                 <input type="checkbox" ng-model="newLink.days[$index]" ng-change="checkValidationDays()">
-              </label>{{day}}
+              </label>
+              <br />
+              <span ng-repeat="day in days" class="uppercase">{{shortLabelDays[$index]}}</span>
             </li>
             <input type="hidden" ng-model="newLink.isDayValid" required />
             <li class="item item-toggle">

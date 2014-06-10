@@ -5,6 +5,9 @@
 .visited { text-decoration: line-through; }
 .visited .item-content { background-color: #EEEEEE; }
 
+i.today-placeholder { font-size: 16px !important; }
+.border-top-2 { border-top: 2px solid; }
+
 /* form validation */
 input[type=text].ng-invalid {
 	border: 1px solid red !important;
@@ -18,3 +21,7 @@ input[type=text].ng-valid {
 	vertical-align: text-top;
 }
 #settings-list button i { width: 24px; }
+
+.inline-days label { width: 14.2%; }
+.inline-days label input[type=checkbox] { margin: auto; }
+.inline-days span { display: inline-block; width: 14.2%; text-align: center}
