@@ -92,6 +92,10 @@ angular.module('dailynk.controllers', [])
 			}
 		}
 		$scope.updateStorageDb();
+
+		// Update View
+		$scope.doWeekView();
+		$scope.selectedDayLinks = $scope.weekView[$scope.selectedDay];
 	};
 
 	/* Seventh is for all day */
