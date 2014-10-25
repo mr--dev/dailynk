@@ -12,7 +12,7 @@
     </ion-header-bar>
 
     <!-- link of selected day -->
-    <ion-content>
+    <ion-content class="home-content">
       <ion-list can-swipe="true" delegate-handle="link-list-handler">
         <ion-item ng-repeat=" link in selectedDayLinks | orderBy:'visited':false " ng-class="{visited: db[link.id].visited}" ng-click="openLink(link.id, $event)">
           <h3 class="uppercase">
@@ -28,14 +28,15 @@
           </ion-option-button>
         </ion-item>
       </ion-list>
+
     </ion-content>
     <!-- /.link of selected day -->
 
-    <div class="tabs tabs-positive tabs-icon-only">
+    <ion-footer-bar class="bar-positive tabs tabs-icon-only home-footer">
       <a class="tab-item" ng-click="addLink()"><i class="icon ion-android-add"></i></a>
       <a class="tab-item" href="#/favorites"><i class="icon ion-android-star"></i></a>
       <a class="tab-item" href="#/settings"><i class="icon ion-android-settings"></i></a>
-    </div>
+    </ion-footer-bar>
 
   </ion-side-menu-content>
   <!-- /.MAIN MENU -->

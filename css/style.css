@@ -28,3 +28,11 @@ input[type=text].ng-valid {
 .inline-days label { width: 14.2%; }
 .inline-days label input[type=checkbox] { margin: auto; }
 .inline-days span { display: inline-block; width: 14.2%; text-align: center}
+
+/* ion-footer in home view (see ticket # )*/
+ion-footer-bar.home-footer {
+	padding: 0;
+}
+ion-content.home-content.has-footer {
+	bottom: 49px;
+}
